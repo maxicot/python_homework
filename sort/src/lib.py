@@ -1,11 +1,14 @@
-from typing import Callable, TypeVar, List
+from typing import TypeVar
+from collections.abc import Callable
 
 T = TypeVar('T')
 
 # An all too recursive implementation of merge sort.
-# Either comparisons between elements must be supported on the type's level or the `cmp` argument must be provided.
-# The default behavior of `cmp` is to check whether the first argument is lesser than the second
-def merge_sort(array: List[T], cmp: Callable[T, T] = lambda x, y: x < y) -> List[T]:
+# Either comparisons between elements must be supported
+# on the type's level or the `cmp` argument must be provided.
+# The default behavior of `cmp` is to check
+# whether the first argument is lesser than the second
+def merge_sort(array: list, cmp: Callable[[T, T], bool] = lambda x, y: x < y) -> list:
     if len(array) < 2:
         return array
 
@@ -15,7 +18,7 @@ def merge_sort(array: List[T], cmp: Callable[T, T] = lambda x, y: x < y) -> List
 
     return merge(left, right, cmp)
 
-def merge(left: List[T], right: List[T], cmp: Callable[T, T]) -> List[T]:
+def merge(left: list, right: list, cmp: Callable[[T, T], bool]) -> list:
     if not left:
         return right
     if not right:
