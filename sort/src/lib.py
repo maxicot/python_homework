@@ -1,7 +1,8 @@
-from typing import TypeVar
 from collections.abc import Callable
+from typing import TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
+
 
 # An all too recursive implementation of merge sort.
 # Either comparisons between elements must be supported
@@ -17,6 +18,7 @@ def merge_sort(array: list, cmp: Callable[[T, T], bool] = lambda x, y: x < y) ->
     right = merge_sort(array[:middle], cmp)
 
     return merge(left, right, cmp)
+
 
 def merge(left: list, right: list, cmp: Callable[[T, T], bool]) -> list:
     if not left:
