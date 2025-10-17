@@ -13,3 +13,7 @@
       "RET",      # Хорошие практики возврата
       "SIM",      # Общие правила упрощения
   ]
+
+[tool.pytest.ini_options]
+  python_files = "*.py"
+  testpaths = ["./*/tests"]
