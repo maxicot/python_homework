@@ -1,5 +1,6 @@
-from ..src.lib import curry
 import pytest
+
+from ..src.lib import curry
 
 
 def add_args(*args):
