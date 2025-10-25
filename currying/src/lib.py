@@ -18,3 +18,19 @@ def curry(f: callable, arity=None):
         return lambda arg: inner(*args, arg)
 
     return lambda arg: inner(arg)
+
+
+# Uncurry a curried function
+def uncurry(f: callable):
+    def inner(*args):
+        value = f
+
+        for arg in args:
+            try:
+                value = value(arg)
+            except Exception:
+                raise Exception("incorrect amount of arguments provided")
+
+        return value
+
+    return inner

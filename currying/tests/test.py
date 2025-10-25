@@ -1,6 +1,6 @@
 import pytest
 
-from ..src.lib import curry
+from ..src.lib import curry, uncurry
 
 
 def add_args(*args):
@@ -33,3 +33,13 @@ def test_unspecified():
 
 def test_zero():
     assert curry(add_args, 0)() == 0
+
+
+def test_uncurry():
+    assert uncurry(curry(add2))(1, 2) == 3
+
+
+def test_uncurry_incorrect():
+    with pytest.raises(Exception) as e:
+        uncurry(curry(add2))(1, 2, 3)
+        assert e == "incorrect amount of arguments provided"
