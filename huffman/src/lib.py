@@ -133,8 +133,6 @@ def decode_bytes(encoded: str, table: dict[str, str], padding: int) -> str:
 # ```
 def encode_file(inp: str) -> str:
     encoded, table, padding = encode_bytes(inp)
-    global dump_a
-    dump_a = table
 
     # File format:
     # padding size (1 byte) + table length (1 byte)
