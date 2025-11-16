@@ -17,7 +17,15 @@ def sorted_insert(lst: list, value, key):
     lst.insert(target_idx, value)
 
 
+# Huffman's coding
 def encode(inp: str) -> tuple[str, dict[str, str]]:
+    # edded end case checks
+    if len(inp) == 0:
+        return ("", {})
+
+    if len(inp) == 1:
+        return ("0", {"0": inp[0]})
+
     output_string = ""
     dictionary = {}
 
@@ -64,7 +72,11 @@ def encode(inp: str) -> tuple[str, dict[str, str]]:
 # new code
 
 
+# Decode a string encoded with `encode`
 def decode(encoded: str, table: dict[str, str]) -> str:
+    if len(table) == 0:
+        return ""
+
     max_len = max(map(len, table.keys()))
     res = ""
 
@@ -98,13 +110,13 @@ def bytify(s: str) -> str:
 def encode_bytes(inp: str) -> tuple[str, dict[str, str], int]:
     encoded, table = encode(inp)
     padding = 8 - len(encoded) % 8
+
+    if padding == 8:
+        padding = 0
+
     aligned = "0" * padding + encoded
 
-    return (
-        bytify(aligned),
-        table,
-        padding if padding != 8 else 0,
-    )
+    return (bytify(aligned), table, padding)
 
 
 def decode_bytes(encoded: str, table: dict[str, str], padding: int) -> str:
@@ -112,8 +124,17 @@ def decode_bytes(encoded: str, table: dict[str, str], padding: int) -> str:
     return decode(encoded, table)
 
 
+# Produce a standalone file format for a given input.
+#
+# Usage example:
+# ```
+# with open('file', newline = '') as f, open('file_encoded', 'w') as e:
+#     e.write(encode_file(f.read()))
+# ```
 def encode_file(inp: str) -> str:
     encoded, table, padding = encode_bytes(inp)
+    global dump_a
+    dump_a = table
 
     # File format:
     # padding size (1 byte) + table length (1 byte)
@@ -134,6 +155,14 @@ def encode_file(inp: str) -> str:
     return chr(padding) + length + table + encoded
 
 
+# Decode a file encoded with `encode_file`.
+# IMPORTANT: specify `open`'s `newline` argument to be an empty string.
+#
+# Usage example:
+# ```
+# with open('file', newline = '') as f, open('file_decoded', 'w', newline = '') as d:
+#     d.write(decode_file(f.read()))
+# ```
 def decode_file(encoded: str) -> str:
     padding = ord(encoded[0])
     length = ord(encoded[1])
@@ -149,7 +178,7 @@ def decode_file(encoded: str) -> str:
         size = ord(encoded[0])
         bits = mul_of_8(size)
         code = encoded[1 : 1 + bits // 8]
-        code = "".join(format(ord(i), f"0{bits}b") for i in code)[bits - size :]
+        code = "".join(format(ord(i), "08b") for i in code)[-size:]
         encoded = encoded[1 + bits // 8 :]
         value = encoded[0]
         encoded = encoded[1:]
