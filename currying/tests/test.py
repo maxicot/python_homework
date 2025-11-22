@@ -1,0 +1,45 @@
+import pytest
+
+from ..src.lib import curry, uncurry
+
+
+def add_args(*args):
+    return sum(args)
+
+
+def add2(a, b):
+    return a + b
+
+
+def test_specified():
+    assert curry(add_args, 3)(1)(2)(3) == 6
+
+
+def test_negative():
+    with pytest.raises(Exception) as e:
+        curry(add2, -1)
+        assert e == "negative arity"
+
+
+def test_less():
+    with pytest.raises(Exception) as e:
+        curry(add2, 1)
+        assert e == "specified arity is lesser than required"
+
+
+def test_unspecified():
+    assert curry(add2)(1)(2) == 3
+
+
+def test_zero():
+    assert curry(add_args, 0)() == 0
+
+
+def test_uncurry():
+    assert uncurry(curry(add2))(1, 2) == 3
+
+
+def test_uncurry_incorrect():
+    with pytest.raises(Exception) as e:
+        uncurry(curry(add2))(1, 2, 3)
+        assert e == "incorrect amount of arguments provided"
