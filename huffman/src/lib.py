@@ -19,7 +19,7 @@ def sorted_insert(lst: list, value, key):
 
 # Huffman's coding
 def encode(inp: str) -> tuple[str, dict[str, str]]:
-    # edded end case checks
+    # added edge case checks
     if len(inp) == 0:
         return ("", {})
 
